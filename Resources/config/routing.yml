@@ -1,0 +1,6 @@
+# Скачивание файла
+file.download:
+    path: /files/{token}
+    methods: [GET]
+    defaults:
+        _controller: 'file.controller.download:execute'

@@ -1,0 +1,41 @@
+imports:
+    - { resource: controllers.yml }
+    - { resource: view.yml }
+
+services:
+    # Сервис работы с удаленным хранилищем
+    file.service.storage:
+        class: Order\File\Service\StorageService
+        arguments:
+            - '@oneup_flysystem.webdav_filesystem_filesystem'
+            - '%remote_mount_path%'
+
+    # Сервис токенов
+    file.service.token:
+        class: Order\File\Service\TokenService
+        arguments:
+            - '@file.service.token_builder_factory'
+            - '@oauth.private_key'
+            - '@oauth.signer'
+
+    # Фабрика строителей токенов
+    file.service.token_builder_factory:
+        class: Order\File\Service\TokenBuilderFactory
+
+    # Сервис предоставление доступа в файлам через jwt токен
+    file.service.jwt_token_accessible_storage:
+        class: Order\File\Service\JwtAccessibleStorage
+        arguments:
+            - '@oneup_flysystem.webdav_filesystem_filesystem'
+            - '@timer'
+            - '@jwt.service'
+            - '@file.service.token'
+            - '%tmp_file_dir%'
+
+    # Сервис создания адресов для скачивания файлов
+    file.service.download_url_generator:
+        class: Order\File\Service\DownloadUrlGenerator
+        arguments:
+            - '@file.service.jwt_token_accessible_storage'
+            - '@router'
+            - '%file_server_url%'

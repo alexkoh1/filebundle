@@ -1,0 +1,6 @@
+services:
+    # Контроллер скачивания файлов
+    file.controller.download:
+        class: Order\File\Controller\DownloadController
+        arguments:
+            - '@file.service.jwt_token_accessible_storage'

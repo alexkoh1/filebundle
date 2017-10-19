@@ -1,0 +1,8 @@
+services:
+    # Фабрика представления URL документа
+    file.view.url:
+        class: Order\File\View\UrlViewFactory
+        tags:
+            -
+                name: 'view.factory'
+                view: 'view.file_url'
